@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Mémo d\'archer</string>
+    
+    <string name="title_bow_detail">Bow Detail</string>
+    <string name="title_activity_main">Memo Archer</string>
+    <string name="title_fragment_landmark">Repères</string>
+    <string name="title_fragment_notes">Détails</string>
+    <string name="title_fragment_preferences">Préférences</string>
+    
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>
