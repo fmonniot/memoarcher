@@ -52,13 +52,6 @@ public class MainActivity extends FragmentActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		// Retrieve the default bow. If none, create one
-		mBowManager = new BowManager(this);
-		mBow = mBowManager.findOneById(1);
-		if(mBow == null) {
-			mBow = mBowManager.createBow("Compund", null, null);
-			mBowManager.save(mBow);
-		}
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
@@ -68,7 +61,13 @@ public class MainActivity extends FragmentActivity implements
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
-		
+
+		// Retrieve the default bow. If none, create one
+		mBowManager = new BowManager(this);
+		mBow = mBowManager.findOneById(1);
+		if(mBow == null) {
+			startActivity(new Intent(this, FirstActivity.class));
+		}
 		setTitle(getBow().getName());
 	}
 	

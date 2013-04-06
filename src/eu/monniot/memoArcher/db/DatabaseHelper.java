@@ -15,7 +15,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * The database version (must be incremented if the database schema change)
      */
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 1;
     
     /*
      * SQL Helpers
@@ -50,13 +50,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 * will stop using this application.
 	 */
 	@Override
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		db.execSQL("DROP TABLE IF EXISTS " + BowEntry.TABLE_NAME); onCreate(db);}
 
 	/**
 	 * Same as {@link DatabaseHelper#onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)}
 	 */
 	@Override
-    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		db.execSQL("DROP TABLE IF EXISTS " + BowEntry.TABLE_NAME); onCreate(db);}
 
 
 }

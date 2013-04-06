@@ -3,6 +3,7 @@
 
     <string name="title_activity_main">Memo Archer</string>
     <string name="title_activity_settings">Paramètres de l\'application</string>
+    <string name="title_activity_first">Avant de commencer</string>
     
     <string name="title_bow_detail">Bow Detail</string>
     
