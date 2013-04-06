@@ -5,6 +5,7 @@ import eu.monniot.memoArcher.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,7 @@ import android.widget.TextView;
  * Activities containing this fragment MUST implement the {@link Callbacks}
  * interface.
  */
-public class LandmarkFragment extends Fragment {
+public class LandmarkFragment extends Fragment implements OnDataChanged {
 
 	@SuppressWarnings("unused")
 	private OnFragmentInteractionListener mListener;
@@ -39,7 +40,10 @@ public class LandmarkFragment extends Fragment {
 	 * Views.
 	 */
 	private ListAdapter mAdapter;
+	
+	private boolean mDataHasChanged = false;
 
+	
 	public static LandmarkFragment newInstance() {
 		LandmarkFragment fragment = new LandmarkFragment();
 		return fragment;
@@ -53,12 +57,24 @@ public class LandmarkFragment extends Fragment {
 	}
 
 	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		try {
+			mListener = (OnFragmentInteractionListener) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString()
+					+ " must implement OnFragmentInteractionListener");
+		}
+
+		mAdapter = new LandmarkAdapter((MainActivity) getActivity());
+	}
+	
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-
+		
 		// TODO: Change Adapter to display your content
-		mAdapter = new LandmarkAdapter((MainActivity) getActivity());
 	}
 
 	@Override
@@ -66,6 +82,10 @@ public class LandmarkFragment extends Fragment {
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_landmark, container,
 				false);
+		
+		if(mDataHasChanged) {
+			forceDataRefresh();
+		}
 
 		// Set the adapter
 		mListView = (AbsListView) view.findViewById(android.R.id.list);
@@ -75,20 +95,10 @@ public class LandmarkFragment extends Fragment {
 	}
 
 	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		try {
-			mListener = (OnFragmentInteractionListener) activity;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString()
-					+ " must implement OnFragmentInteractionListener");
-		}
-	}
-
-	@Override
 	public void onDetach() {
 		super.onDetach();
 		mListener = null;
+		mAdapter = null;
 	}
 
 	/**
@@ -104,6 +114,20 @@ public class LandmarkFragment extends Fragment {
 		}
 	}
 
+	@Override
+	public void dataHaveChanged() {
+		mDataHasChanged = true;
+	}
+	
+	@Override
+	public void forceDataRefresh() {
+		if(getActivity() == null)
+			return;
+		
+		mAdapter = new LandmarkAdapter((MainActivity) getActivity());
+		mDataHasChanged = false;
+	}
+
 	/**
 	 * Cannot be made public because it depend massively of the mBow attribute
 	 * @author François
@@ -116,6 +140,7 @@ public class LandmarkFragment extends Fragment {
 		public LandmarkAdapter(MainActivity activity) {
 			mInflater = LayoutInflater.from(activity);
 			mBow = activity.getBow();
+			Log.d(getTag(), "LandmarkAdapter has been created with bow "+mBow.toString());
 		}
 		
 		@Override
@@ -167,4 +192,5 @@ public class LandmarkFragment extends Fragment {
 		}
 		
 	}
+
 }

@@ -77,18 +77,33 @@ public class BowManager {
 		return bow;
 	}
 	
+	/**
+	 * Return the position of the bow of all the bow. Useful for selected a default entry in a list.
+	 * 
+	 * @param bow
+	 * @return 
+	 */
+	public int findPositionOf(Bow bow) {
+		SQLiteDatabase db = mDbHelper.getReadableDatabase();
+		
+	    Cursor c = queryAllBow(db);
+
+    	if(c.getCount() == 0 || !c.moveToFirst()) {
+    		throw new IndexOutOfBoundsException("The database does not contains any entries.");
+    	} else {
+    		int position = 0;
+    		do {
+    			if(bow.getId() == c.getLong(0)) { break; }
+    			position++;
+    		} while ( c.moveToNext() );
+    		return position;
+    	}
+	}
+	
 	public List<Bow> getAllBow() {
 		SQLiteDatabase db = mDbHelper.getReadableDatabase();
 		
-	    Cursor c = db.query(
-                BowEntry.TABLE_NAME,    // table name
-                ALL_BOW_COLUMNS,        // columns
-                null,                   // selection (WHERE clause)
-                null,                   // selectionArgs
-                null,                   // groupBy
-                null,                   // having
-                null                    // orderBy
-              );
+	    Cursor c = queryAllBow(db);
 	    
 	    	if(c.getCount() == 0 || !c.moveToFirst()) {
 	    		return  null;
@@ -129,6 +144,18 @@ public class BowManager {
 		return n>0;
 	}
 
+	private Cursor queryAllBow(SQLiteDatabase db) {
+		return db.query(
+                BowEntry.TABLE_NAME,    // table name
+                ALL_BOW_COLUMNS,        // columns
+                null,                   // selection (WHERE clause)
+                null,                   // selectionArgs
+                null,                   // groupBy
+                null,                   // having
+                null                    // orderBy
+              );
+	}
+	
 	private Bow cursorToBow(Cursor c) {
 		Bow bow = new Bow();
 		bow.setId(c.getLong(0));

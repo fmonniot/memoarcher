@@ -21,9 +21,11 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.SpinnerAdapter;
 
@@ -70,11 +72,9 @@ public class MainActivity extends FragmentActivity implements
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
 		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
-		mViewPager.setAdapter(mSectionsPagerAdapter);
-
+		
 		
 		/*
 		 * Define the navigation 
@@ -88,8 +88,8 @@ public class MainActivity extends FragmentActivity implements
 
 			  @Override
 			  public boolean onNavigationItemSelected(int position, long itemId) {
-				  
-				mSectionsPagerAdapter.notifyDataSetChanged();
+				mBow = (Bow) mNavigationAdapter.getItem(position);
+				mViewPager.getAdapter().notifyDataSetChanged();
 			    return true;
 			  }
 			};
@@ -112,6 +112,10 @@ public class MainActivity extends FragmentActivity implements
 		if(mBow == null) {
 			startActivity(new Intent(this, FirstActivity.class));
 		}
+		mViewPager.setAdapter(mSectionsPagerAdapter);
+		mViewPager.setOnPageChangeListener(mSectionsPagerAdapter);
+		
+		getActionBar().setSelectedNavigationItem(mBowManager.findPositionOf(mBow));
 		
 		setTitle(getBow().getName());
 	}
@@ -161,28 +165,56 @@ public class MainActivity extends FragmentActivity implements
 		
 	}
 
+	@SuppressLint("CommitTransaction")
+	private void showAddBowDialog() {
+	    
+
+	    // DialogFragment.show() will take care of adding the fragment
+	    // in a transaction.  We also want to remove any currently showing
+	    // dialog, so make our own transaction and take care of that here.
+	    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+	    Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+	    if (prev != null) {
+	        ft.remove(prev);
+	    }
+	    ft.addToBackStack(null);
+
+	    // Create and show the dialog.
+	    DialogFragment newFragment = AddBowDialogFragment.newInstance();
+	    newFragment.show(ft, "dialog");
+	}
+
 	/**
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
 	 * one of the sections/tabs/pages.
 	 */
-	private class SectionsPagerAdapter extends FragmentPagerAdapter {
-
+	private class SectionsPagerAdapter extends FragmentPagerAdapter implements
+			ViewPager.OnPageChangeListener {
+		
+		private boolean[] mDataSetHasChanged = new boolean[]{false,false,false};
+		
+		private int mCurrentlyViewedPage = 0;
+		
 		public SectionsPagerAdapter(FragmentManager fm) {
 			super(fm);
+			
 		}
-
+		
 		@Override
 		public Fragment getItem(int position) {
-
+			Fragment f = new Fragment();
 			switch (position) {
 			case 2:
-				return BowPreferenceFragment.newInstance(getBow());
+				f = BowPreferenceFragment.newInstance(getBow());
+				break;
 			case 1:
-				return NoteFragment.newInstance(getBow());
+				f = NoteFragment.newInstance(getBow());
+				break;
 			case 0:
-			default:
-				return LandmarkFragment.newInstance();
+				f = LandmarkFragment.newInstance();
+				break;
 			}
+			return f;
 		}
 
 		@Override
@@ -203,26 +235,51 @@ public class MainActivity extends FragmentActivity implements
 			}
 			return null;
 		}
+		
+		@Override
+		public void notifyDataSetChanged() {
+			super.notifyDataSetChanged();
+			
+			Log.v("SectionsPagerAdapter", "call notifyDataSetChanged(); currentPage="+String.valueOf(mCurrentlyViewedPage));
+			mDataSetHasChanged = new boolean[]{true, true, true};
+			
+			((OnDataChanged)getItem(mCurrentlyViewedPage)).forceDataRefresh();
+		}
+		
+		@Override
+	    public int getItemPosition(Object item) {
+			Fragment f = (Fragment) item;
+
+    		Log.d("SectionsPagerAdapter", "getItemPosition("+f.getClass().toString()+")");
+	        return POSITION_NONE;
+	        
+	    }
+
+	    @Override
+	    public Object instantiateItem(ViewGroup container, int position) {
+    		Log.d("SectionsPagerAdapter", "instantiateView("+String.valueOf(position)+")");
+	        Object o = super.instantiateItem(container, position);
+	        
+	    	if(mDataSetHasChanged[position]) {
+	    		mDataSetHasChanged[position] = false;
+		        ((OnDataChanged) o).dataHaveChanged();
+	    	}
+	    	return o;
+	    }
+
+		@Override
+		public void onPageScrolled(int position, float positionOffset,
+				int positionOffsetPixels) {}
+
+		@Override
+		public void onPageSelected(int position) {
+			mCurrentlyViewedPage = position;
+		}
+
+		@Override
+		public void onPageScrollStateChanged(int state) {}
 	}
 
 	
-	@SuppressLint("CommitTransaction")
-	private void showAddBowDialog() {
-	    
-
-	    // DialogFragment.show() will take care of adding the fragment
-	    // in a transaction.  We also want to remove any currently showing
-	    // dialog, so make our own transaction and take care of that here.
-	    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-	    Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
-	    if (prev != null) {
-	        ft.remove(prev);
-	    }
-	    ft.addToBackStack(null);
-
-	    // Create and show the dialog.
-	    DialogFragment newFragment = AddBowDialogFragment.newInstance();
-	    newFragment.show(ft, "dialog");
-	}
 
 }
