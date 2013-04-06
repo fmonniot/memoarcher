@@ -1,6 +1,10 @@
-package eu.monniot.memoArcher;
+package eu.monniot.memoArcher.ui;
 
 import java.util.List;
+
+import eu.monniot.memoArcher.Bow;
+import eu.monniot.memoArcher.BowManager;
+import eu.monniot.memoArcher.R;
 
 import android.os.Bundle;
 import android.preference.ListPreference;

@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="eu.monniot.memoArcher.SettingsActivity"
+            android:name="eu.monniot.memoArcher.ui.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName="eu.monniot.memoArcher.ui.MainActivity" >
             <meta-data

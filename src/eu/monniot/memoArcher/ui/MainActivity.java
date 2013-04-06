@@ -5,7 +5,6 @@ import java.util.Locale;
 import eu.monniot.memoArcher.Bow;
 import eu.monniot.memoArcher.BowManager;
 import eu.monniot.memoArcher.R;
-import eu.monniot.memoArcher.SettingsActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
