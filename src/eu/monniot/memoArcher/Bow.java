@@ -61,6 +61,11 @@ public class Bow {
 		return mLandmark.size();
 	}
 	
+	@Override
+	public String toString() {
+		return getName();
+	}
+	
 	// TODO add some consistency to the Landmark class
 	public class Landmark {
 		public double distance;

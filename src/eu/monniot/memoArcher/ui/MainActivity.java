@@ -7,6 +7,8 @@ import eu.monniot.memoArcher.BowManager;
 import eu.monniot.memoArcher.R;
 import eu.monniot.memoArcher.ui.AddBowDialogFragment.OnDialogResultListener;
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
+import android.app.ActionBar.OnNavigationListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -22,6 +24,8 @@ import android.text.Editable;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.SpinnerAdapter;
 
 public class MainActivity extends FragmentActivity implements 
 		OnFragmentInteractionListener, OnDialogResultListener {
@@ -50,6 +54,10 @@ public class MainActivity extends FragmentActivity implements
 
 	private SharedPreferences mPreferences;
 	
+	private OnNavigationListener mOnNavigationListener;
+	
+	private SpinnerAdapter mNavigationAdapter;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +76,28 @@ public class MainActivity extends FragmentActivity implements
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 
 		
+		/*
+		 * Define the navigation 
+		 */
+		mNavigationAdapter = new ArrayAdapter<Bow>(
+				this, 
+				R.layout.simple_spinner_dropdown_item, 
+				mBowManager.getAllBow());
+		
+		mOnNavigationListener = new OnNavigationListener() {
+
+			  @Override
+			  public boolean onNavigationItemSelected(int position, long itemId) {
+				  
+				mSectionsPagerAdapter.notifyDataSetChanged();
+			    return true;
+			  }
+			};
+			
+			ActionBar actionBar = getActionBar();
+			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+			actionBar.setListNavigationCallbacks(mNavigationAdapter, mOnNavigationListener);
+			actionBar.setDisplayShowTitleEnabled(false);
 	}
 	
 	@Override
