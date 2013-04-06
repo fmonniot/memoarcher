@@ -6,7 +6,9 @@ import eu.monniot.memoArcher.R;
 import eu.monniot.memoArcher.ui.AddBowDialogFragment.OnDialogResultListener;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -16,18 +18,21 @@ public class FirstActivity extends FragmentActivity implements OnDialogResultLis
 
 	BowManager mBowManager;
 	Bow mBow;
+	SharedPreferences mPreferences;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setTitle(R.string.title_activity_first);
 
 		// Retrieve the default bow. If none, create one
+		mPreferences = PreferenceManager.getDefaultSharedPreferences(getApplication());
 		mBowManager = new BowManager(this);
-		mBow = mBowManager.findOneById(1);
+		mBow = mBowManager.findOneById(Long.parseLong(mPreferences.getString("pref_default_bow", "1")));
 		if(mBow == null) {
 			showAddBowDialog();
 		} else {
-			startActivity(new Intent(this, MainActivity.class));
+			skipActivity();
 		}
 	}
 
@@ -61,6 +66,12 @@ public class FirstActivity extends FragmentActivity implements OnDialogResultLis
 							);
 		mBowManager.save(bow);
 		
+		mPreferences.edit().putString("pref_default_bow", String.valueOf(bow.getId())).apply();
+		skipActivity();
+	}
+	
+	private void skipActivity() {
+		startActivity(new Intent(this, MainActivity.class));
 	}
 	
 }

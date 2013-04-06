@@ -8,7 +8,9 @@ import eu.monniot.memoArcher.R;
 import eu.monniot.memoArcher.ui.AddBowDialogFragment.OnDialogResultListener;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -45,29 +47,42 @@ public class MainActivity extends FragmentActivity implements
 	private Bow mBow;
 	
 	private BowManager mBowManager;
+
+	private SharedPreferences mPreferences;
 	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+
+		mBowManager = new BowManager(getApplication());
+		mPreferences = PreferenceManager.getDefaultSharedPreferences(getApplication());
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
-		mSectionsPagerAdapter = new SectionsPagerAdapter(
-				getSupportFragmentManager());
+		mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
 
-		// Retrieve the default bow. If none, create one
-		mBowManager = new BowManager(this);
-		mBow = mBowManager.findOneById(1);
+		
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		/**
+		 * 	Retrieve the default bow. If none, create one (it should not be possible
+		 *  since {@link FirstActivity} is launched before {@link MainActivity})
+		 */
+		mBow = mBowManager.findOneById(Long.parseLong(mPreferences.getString("pref_default_bow", "1")));
 		if(mBow == null) {
 			startActivity(new Intent(this, FirstActivity.class));
 		}
+		
 		setTitle(getBow().getName());
 	}
 	
