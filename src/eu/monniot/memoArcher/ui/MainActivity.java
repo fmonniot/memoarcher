@@ -48,7 +48,11 @@ public class MainActivity extends FragmentActivity implements
 		
 		// Retrieve the default bow. If none, create one
 		BowManager bowManager = new BowManager(this);
-		mBow = bowManager.createBow("Compund", null, null);
+		mBow = bowManager.findOneById(1);
+		if(mBow == null) {
+			mBow = bowManager.createBow("Compund", null, null);
+			bowManager.save(mBow);
+		}
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.

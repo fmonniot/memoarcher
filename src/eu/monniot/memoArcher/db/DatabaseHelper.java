@@ -31,7 +31,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         		BowEntry._ID + INT_TYPE + " PRIMARY KEY" + COMMA_SEP +
         		BowEntry.COLUMN_NAME_NAME + TEXT_TYPE + COMMA_SEP +
         		BowEntry.COLUMN_NAME_MARK_UNIT + DOUBLE_TYPE + COMMA_SEP +
-        		BowEntry.COLUMN_NAME_DISTANCE_UNIT + DOUBLE_TYPE + COMMA_SEP +
+        		BowEntry.COLUMN_NAME_DISTANCE_UNIT + DOUBLE_TYPE +
         " )";
     
 

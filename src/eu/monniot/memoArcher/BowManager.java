@@ -4,6 +4,7 @@ package eu.monniot.memoArcher;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
@@ -13,6 +14,13 @@ import eu.monniot.memoArcher.db.DatabaseHelper;
 
 public class BowManager {
 
+	private static final String[] ALL_BOW_COLUMNS = new String[] {
+		BowEntry._ID,
+		BowEntry.COLUMN_NAME_NAME,
+		BowEntry.COLUMN_NAME_MARK_UNIT,
+		BowEntry.COLUMN_NAME_DISTANCE_UNIT
+	};
+	
 	DatabaseHelper mDbHelper;
 	SharedPreferences mPreferences;
 	
@@ -41,19 +49,29 @@ public class BowManager {
 		bow.setDistanceUnit(distanceUnit);
 		
 		return bow;
+	}
+	
+	public Bow findOneById(long id) {
 		
-
-//	    ContentValues values = new ContentValues();
-//	    values.put(MySQLiteHelper.COLUMN_COMMENT, comment);
-//	    long insertId = database.insert(MySQLiteHelper.TABLE_COMMENTS, null,
-//	        values);
-//	    Cursor cursor = database.query(MySQLiteHelper.TABLE_COMMENTS,
-//	        allColumns, MySQLiteHelper.COLUMN_ID + " = " + insertId, null,
-//	        null, null, null);
-//	    cursor.moveToFirst();
-//	    Comment newComment = cursorToComment(cursor);
-//	    cursor.close();
-//	    return newComment;
+		SQLiteDatabase db = mDbHelper.getReadableDatabase();
+		
+		Cursor c = db.query(
+                BowEntry.TABLE_NAME,                // table name
+                ALL_BOW_COLUMNS,                    // columns
+                "_ID = ?",                          // selection (WHERE clause)
+                new String[]{ String.valueOf(id) }, // selectionArgs
+                null,                               // groupBy
+                null,                               // having
+                null                                // orderBy
+        );
+		
+		if(c.getCount() == 0)
+			return null;
+		
+		c.moveToFirst();
+		Bow bow = cursorToBow(c);
+		c.close(); db.close();
+		return bow;
 	}
 	
 	public Bow save(Bow bow) {
@@ -65,6 +83,7 @@ public class BowManager {
 		
 		SQLiteDatabase db = mDbHelper.getWritableDatabase();
 		long bowId = db.insert(BowEntry.TABLE_NAME, BowEntry.COLUMN_NAME_NAME, values);
+		db.close();
 		
 		if( bowId > 0) {
 			bow.setId(bowId);
@@ -73,6 +92,23 @@ public class BowManager {
 		throw new SQLException("Failed to insert row into " + BowEntry.TABLE_NAME);
 		
 	}
-	public boolean delete(Bow bow) {return false;}
 	
+	public boolean delete(Bow bow) {
+		
+		SQLiteDatabase db = mDbHelper.getWritableDatabase();
+		int n = db.delete(	BowEntry.TABLE_NAME,"_ID = ?",
+					new String[]{ String.valueOf(bow.getId()) });
+		db.close();
+		return n>0;
+	}
+	
+	private Bow cursorToBow(Cursor c) {
+		Bow bow = new Bow();
+		bow.setId(c.getLong(0));
+		bow.setName(c.getString(1));
+		bow.setMarkUnit(c.getString(2));
+		bow.setDistanceUnit(c.getString(3));
+		
+		return bow;
+	}
 }
