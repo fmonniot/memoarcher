@@ -2,20 +2,23 @@ package eu.monniot.memoArcher.ui;
 
 import java.util.Locale;
 
+import eu.monniot.memoArcher.Bow;
+import eu.monniot.memoArcher.BowManager;
 import eu.monniot.memoArcher.R;
-import eu.monniot.memoArcher.R.id;
-import eu.monniot.memoArcher.R.layout;
-import eu.monniot.memoArcher.R.string;
-import eu.monniot.memoArcher.ui.LandmarkFragment.OnFragmentInteractionListener;
-
+import eu.monniot.memoArcher.SettingsActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
-public class MainActivity extends FragmentActivity implements OnFragmentInteractionListener {
+public class MainActivity extends FragmentActivity implements 
+		OnFragmentInteractionListener {
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -33,15 +36,19 @@ public class MainActivity extends FragmentActivity implements OnFragmentInteract
 	ViewPager mViewPager;
 	
 	/**
-	 * The ID of the current bow
+	 * The current bow
 	 */
-	private int mBowId = 1;
+	private Bow mBow;
 	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		// Retrieve the default bow. If none, create one
+		BowManager bowManager = new BowManager(this);
+		mBow = bowManager.createBow("Compund", null, null);
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
@@ -51,7 +58,30 @@ public class MainActivity extends FragmentActivity implements OnFragmentInteract
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mSectionsPagerAdapter);
-
+		
+		setTitle(getBow().getName());
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.menu, menu);
+	    return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    // Handle item selection
+	    switch (item.getItemId()) {
+	        case R.id.action_add_bow:
+	            
+	            return true;
+	        case R.id.action_settings:
+	    		startActivity(new Intent(this, SettingsActivity.class));
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
 	}
 
 	@Override
@@ -75,12 +105,12 @@ public class MainActivity extends FragmentActivity implements OnFragmentInteract
 
 			switch (position) {
 			case 2:
-				return BowPreferenceFragment.newInstance(mBowId);
+				return BowPreferenceFragment.newInstance(getBow());
 			case 1:
-				return NoteFragment.newInstance(mBowId);
+				return NoteFragment.newInstance(getBow());
 			case 0:
 			default:
-				return LandmarkFragment.newInstance(mBowId);
+				return LandmarkFragment.newInstance();
 			}
 		}
 
@@ -104,5 +134,8 @@ public class MainActivity extends FragmentActivity implements OnFragmentInteract
 		}
 	}
 
+	public Bow getBow() {
+		return mBow;
+	}
 
 }

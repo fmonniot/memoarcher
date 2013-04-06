@@ -6,20 +6,13 @@ import java.util.List;
 public class Bow {
 	
 	private List<Bow.Landmark> mLandmark = new ArrayList<Bow.Landmark>();
-	private String mDistanceUnit = "m";
-	private String mMarkUnit = "coutures";
-	private int mId;
+	private long mId;
 	private String mName;
+	private String mMarkUnit = "coutures";
+	private String mDistanceUnit = "m";
 	
-	public static Bow instanciateFromId(int id) {
-		Bow bow = new Bow(id);
-		
-		return bow;
-	}
-	
-	public Bow(int id) {
-		mId = id;
-		//TODO Retrieve content from database
+	public Bow() {
+
 		Landmark l = new Landmark();
 		l.distance = 15;
 		l.mark = 7;
@@ -28,22 +21,38 @@ public class Bow {
 		mLandmark.add(l);		
 	}
 	
-	public String getDistanceUnit() {
-		return mDistanceUnit;
+	public void setId(long id) {
+		mId = id;
 	}
 	
-	public String getMarkUnit() {
-		return mMarkUnit;
-	}
-	
-	public int getId() {
+	public long getId() {
 		return mId;
+	}
+	
+	public void setName(String name) {
+		mName = name;
 	}
 	
 	public String getName() {
 		return mName;
 	}
+
+	public String getMarkUnit() {
+		return mMarkUnit;
+	}
 	
+	public void setMarkUnit(String markUnit) {
+		mMarkUnit = markUnit;
+	}
+
+	public String getDistanceUnit() {
+		return mDistanceUnit;
+	}
+	
+	public void setDistanceUnit(String distanceUnit) {
+		mDistanceUnit = distanceUnit;
+	}
+
 	public Bow.Landmark getLandmark(int at) {
 		return mLandmark.get(at);
 	}
@@ -52,8 +61,10 @@ public class Bow {
 		return mLandmark.size();
 	}
 	
+	// TODO add some consistency to the Landmark class
 	public class Landmark {
-		int distance;
-		int mark;
+		public double distance;
+		public double mark;
 	}
+	
 }

@@ -2,11 +2,7 @@ package eu.monniot.memoArcher.ui;
 
 import eu.monniot.memoArcher.Bow;
 import eu.monniot.memoArcher.R;
-import eu.monniot.memoArcher.Bow.Landmark;
-import eu.monniot.memoArcher.R.id;
-import eu.monniot.memoArcher.R.layout;
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -30,11 +26,6 @@ import android.widget.TextView;
  */
 public class LandmarkFragment extends Fragment {
 
-	private static final String ARG_BOW_ID = "bow_id";
-
-	private int mBowId;
-	private Bow mBow;
-
 	@SuppressWarnings("unused")
 	private OnFragmentInteractionListener mListener;
 
@@ -49,11 +40,8 @@ public class LandmarkFragment extends Fragment {
 	 */
 	private ListAdapter mAdapter;
 
-	public static LandmarkFragment newInstance(int bowId) {
+	public static LandmarkFragment newInstance() {
 		LandmarkFragment fragment = new LandmarkFragment();
-		Bundle args = new Bundle();
-		args.putInt(ARG_BOW_ID, bowId);
-		fragment.setArguments(args);
 		return fragment;
 	}
 
@@ -68,13 +56,9 @@ public class LandmarkFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if (getArguments() != null) {
-			mBowId = getArguments().getInt(ARG_BOW_ID);
-			mBow = Bow.instanciateFromId(mBowId);
-		}
 
 		// TODO: Change Adapter to display your content
-		mAdapter = new LandmarkAdapter(getActivity());
+		mAdapter = new LandmarkAdapter((MainActivity) getActivity());
 	}
 
 	@Override
@@ -121,29 +105,17 @@ public class LandmarkFragment extends Fragment {
 	}
 
 	/**
-	 * This interface must be implemented by activities that contain this
-	 * fragment to allow an interaction in this fragment to be communicated to
-	 * the activity and potentially other fragments contained in that activity.
-	 * <p>
-	 * See the Android Training lesson <a href=
-	 * "http://developer.android.com/training/basics/fragments/communicating.html"
-	 * >Communicating with Other Fragments</a> for more information.
-	 */
-	public interface OnFragmentInteractionListener {
-		// TODO: Update argument type and name
-		public void onFragmentInteraction(int id);
-	}
-
-	/**
 	 * Cannot be made public because it depend massively of the mBow attribute
 	 * @author François
 	 *
 	 */
 	private class LandmarkAdapter extends BaseAdapter {
 		LayoutInflater mInflater;
+		Bow mBow;
 
-		public LandmarkAdapter(Context context) {
-			mInflater = LayoutInflater.from(context);
+		public LandmarkAdapter(MainActivity activity) {
+			mInflater = LayoutInflater.from(activity);
+			mBow = activity.getBow();
 		}
 		
 		@Override
