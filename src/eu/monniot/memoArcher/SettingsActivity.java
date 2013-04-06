@@ -1,5 +1,7 @@
 package eu.monniot.memoArcher;
 
+import java.util.List;
+
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -96,7 +98,7 @@ public class SettingsActivity extends PreferenceActivity {
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			addPreferencesFromResource(R.xml.preferences);
-
+			populateDefaultBowList();
 		}
 		
 		@Override
@@ -104,6 +106,7 @@ public class SettingsActivity extends PreferenceActivity {
 		    super.onResume();
 			bindPreferenceSummaryToValue(findPreference("pref_default_mark_unit"));
 			bindPreferenceSummaryToValue(findPreference("pref_default_distance_unit"));
+			bindPreferenceSummaryToValue(findPreference("pref_default_bow"));
 		}
 
 		@Override
@@ -111,6 +114,24 @@ public class SettingsActivity extends PreferenceActivity {
 		    super.onPause();
 			unbindPreferenceSummaryToValue(findPreference("pref_default_mark_unit"));
 			unbindPreferenceSummaryToValue(findPreference("pref_default_distance_unit"));
+			unbindPreferenceSummaryToValue(findPreference("pref_default_bow"));
+		}
+		
+		private void populateDefaultBowList() {
+			BowManager bowManager = new BowManager(getActivity());
+		    List<Bow> list = bowManager.getAllBow();
+		    
+			ListPreference defaultBowList = (ListPreference) findPreference("pref_default_bow");
+		    CharSequence[] lEntries = new CharSequence[list.size()];
+		    CharSequence[] lEntryValues = new CharSequence[list.size()];
+		    int i = 0;
+			for(Bow bow : list) {
+				lEntries[i] = bow.getName();
+				lEntryValues[i] = String.valueOf(bow.getId());
+				i++;
+			}
+			defaultBowList.setEntries(lEntries);
+			defaultBowList.setEntryValues(lEntryValues);
 		}
 	}
 }

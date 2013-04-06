@@ -1,6 +1,9 @@
 package eu.monniot.memoArcher;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -74,6 +77,30 @@ public class BowManager {
 		return bow;
 	}
 	
+	public List<Bow> getAllBow() {
+		SQLiteDatabase db = mDbHelper.getReadableDatabase();
+		
+	    Cursor c = db.query(
+                BowEntry.TABLE_NAME,    // table name
+                ALL_BOW_COLUMNS,        // columns
+                null,                   // selection (WHERE clause)
+                null,                   // selectionArgs
+                null,                   // groupBy
+                null,                   // having
+                null                    // orderBy
+              );
+	    
+	    	if(c.getCount() == 0 || !c.moveToFirst()) {
+	    		return  null;
+	    	} else {
+	    		List<Bow> list = new ArrayList<Bow>();
+	    		do {
+	    			list.add(cursorToBow(c));
+	    		} while ( c.moveToNext() );
+	    		return list;
+	    	}
+	}
+	
 	public Bow save(Bow bow) {
 		
 		ContentValues values = new ContentValues();
@@ -101,7 +128,7 @@ public class BowManager {
 		db.close();
 		return n>0;
 	}
-	
+
 	private Bow cursorToBow(Cursor c) {
 		Bow bow = new Bow();
 		bow.setId(c.getLong(0));
@@ -111,4 +138,5 @@ public class BowManager {
 		
 		return bow;
 	}
+
 }

@@ -13,5 +13,9 @@
 	        android:title="@string/pref_defaultDistanceUnit_title"
 	        android:defaultValue="m"/>
 	    
+	    <ListPreference 
+	        android:key="pref_default_bow"
+	        android:title="@string/pref_defaultBow_title"/>
+	    
 	</PreferenceCategory>
 </PreferenceScreen>
