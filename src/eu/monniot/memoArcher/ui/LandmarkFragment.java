@@ -1,5 +1,10 @@
-package eu.monniot.memoArcher;
+package eu.monniot.memoArcher.ui;
 
+import eu.monniot.memoArcher.Bow;
+import eu.monniot.memoArcher.R;
+import eu.monniot.memoArcher.Bow.Landmark;
+import eu.monniot.memoArcher.R.id;
+import eu.monniot.memoArcher.R.layout;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;

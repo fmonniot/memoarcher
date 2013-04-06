@@ -1,5 +1,6 @@
-package eu.monniot.memoArcher;
+package eu.monniot.memoArcher.ui;
 
+import eu.monniot.memoArcher.Bow;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 

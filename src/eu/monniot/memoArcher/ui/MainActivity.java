@@ -1,8 +1,12 @@
-package eu.monniot.memoArcher;
+package eu.monniot.memoArcher.ui;
 
 import java.util.Locale;
 
-import eu.monniot.memoArcher.LandmarkFragment.OnFragmentInteractionListener;
+import eu.monniot.memoArcher.R;
+import eu.monniot.memoArcher.R.id;
+import eu.monniot.memoArcher.R.layout;
+import eu.monniot.memoArcher.R.string;
+import eu.monniot.memoArcher.ui.LandmarkFragment.OnFragmentInteractionListener;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
