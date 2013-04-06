@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Mémo d\'archer</string>
     <string name="title_activity_main">Memo Archer</string>
     <string name="title_activity_settings">Paramètres de l\'application</string>
     
-    
     <string name="title_bow_detail">Bow Detail</string>
-    
     
     <string name="title_fragment_landmark">Repères</string>
     <string name="title_fragment_notes">Détails</string>
     <string name="title_fragment_preferences">Préférences</string>
+    <string name="title_fragment_add_bow">Ajouter un arc</string>
     
     <string name="menu_add_bow">Nouvel arc</string>
     <string name="menu_settings">Paramètres</string>
     
     <string name="pref_defaultValue_title">Valeurs par défaut</string>
-    <string name="pref_defaultMarkUnit_title">Unité des repères</string>
     <string name="pref_defaultMarkUnit_default">coutures</string>
-    <string name="pref_defaultDistanceUnit_title">Unité des distances</string>
     <string name="pref_defaultDistanceUnit_default">m</string>
     <string name="pref_defaultBow_title">Arc affiché</string>
 
+    <string name="app_name">Mémo d\'archer</string>
+    <string name="mark_unit">Unité des repères</string>
+    <string name="distance_unit">Unité des distances</string>
+    <string name="bow_name">Nom de l\'arc</string>
 </resources>

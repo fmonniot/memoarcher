@@ -5,19 +5,24 @@ import java.util.Locale;
 import eu.monniot.memoArcher.Bow;
 import eu.monniot.memoArcher.BowManager;
 import eu.monniot.memoArcher.R;
+import eu.monniot.memoArcher.ui.AddBowDialogFragment.OnDialogResultListener;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.text.Editable;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 public class MainActivity extends FragmentActivity implements 
-		OnFragmentInteractionListener {
+		OnFragmentInteractionListener, OnDialogResultListener {
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -39,6 +44,8 @@ public class MainActivity extends FragmentActivity implements
 	 */
 	private Bow mBow;
 	
+	private BowManager mBowManager;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +53,11 @@ public class MainActivity extends FragmentActivity implements
 		setContentView(R.layout.activity_main);
 		
 		// Retrieve the default bow. If none, create one
-		BowManager bowManager = new BowManager(this);
-		mBow = bowManager.findOneById(1);
+		mBowManager = new BowManager(this);
+		mBow = mBowManager.findOneById(1);
 		if(mBow == null) {
-			mBow = bowManager.createBow("Compund", null, null);
-			bowManager.save(mBow);
+			mBow = mBowManager.createBow("Compund", null, null);
+			mBowManager.save(mBow);
 		}
 
 		// Create the adapter that will return a fragment for each of the three
@@ -77,7 +84,7 @@ public class MainActivity extends FragmentActivity implements
 	    // Handle item selection
 	    switch (item.getItemId()) {
 	        case R.id.action_add_bow:
-	            
+	            showAddBowDialog();
 	            return true;
 	        case R.id.action_settings:
 	    		startActivity(new Intent(this, SettingsActivity.class));
@@ -86,10 +93,27 @@ public class MainActivity extends FragmentActivity implements
 	            return super.onOptionsItemSelected(item);
 	    }
 	}
+	
+	public Bow getBow() {
+		return mBow;
+	}
 
 	@Override
 	public void onFragmentInteraction(int id) {
 		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onOkDialogClose(Editable name, Editable markUnit,
+			Editable distanceUnit) {
+
+		Bow bow = mBowManager.createBow(
+								name.toString(),
+								markUnit.toString(),
+								distanceUnit.toString()
+							);
+		mBowManager.save(bow);
 		
 	}
 
@@ -137,8 +161,24 @@ public class MainActivity extends FragmentActivity implements
 		}
 	}
 
-	public Bow getBow() {
-		return mBow;
+	
+	@SuppressLint("CommitTransaction")
+	private void showAddBowDialog() {
+	    
+
+	    // DialogFragment.show() will take care of adding the fragment
+	    // in a transaction.  We also want to remove any currently showing
+	    // dialog, so make our own transaction and take care of that here.
+	    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+	    Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+	    if (prev != null) {
+	        ft.remove(prev);
+	    }
+	    ft.addToBackStack(null);
+
+	    // Create and show the dialog.
+	    DialogFragment newFragment = AddBowDialogFragment.newInstance();
+	    newFragment.show(ft, "dialog");
 	}
 
 }

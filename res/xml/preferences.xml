@@ -5,12 +5,12 @@
         android:key="pref_default_values_settings">
 	    <EditTextPreference
 	        android:key="pref_default_mark_unit"
-	        android:title="@string/pref_defaultMarkUnit_title"
+	        android:title="@string/mark_unit"
 	        android:defaultValue="coutures"/>
 	    
 	    <EditTextPreference
 	        android:key="pref_default_distance_unit"
-	        android:title="@string/pref_defaultDistanceUnit_title"
+	        android:title="@string/distance_unit"
 	        android:defaultValue="m"/>
 	    
 	    <ListPreference 
