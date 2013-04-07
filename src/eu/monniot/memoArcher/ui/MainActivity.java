@@ -75,7 +75,6 @@ public class MainActivity extends FragmentActivity implements
 		// Set up the ViewPager with the sections adapter.
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		
-		
 		/*
 		 * Define the navigation 
 		 */

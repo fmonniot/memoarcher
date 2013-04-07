@@ -24,4 +24,6 @@
     <string name="mark_unit">Unité des repères</string>
     <string name="distance_unit">Unité des distances</string>
     <string name="bow_name">Nom de l\'arc</string>
+    
+    <string name="add_landmark">Ajouter un repère</string>
 </resources>

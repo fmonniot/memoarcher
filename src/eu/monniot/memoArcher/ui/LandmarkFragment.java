@@ -8,11 +8,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.TextView;
@@ -93,6 +95,32 @@ public class LandmarkFragment extends Fragment implements OnDataChanged {
 		((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
 
 		return view;
+	}
+	
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		
+		final Button b = (Button) view.findViewById(android.R.id.addToDictionary);
+		b.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if (event.getAction() == android.view.MotionEvent.ACTION_DOWN)
+		        {
+		            b.setTextColor(getActivity().getResources().getColor(android.R.color.holo_blue_dark));
+		        } else if (event.getAction() == android.view.MotionEvent.ACTION_UP)
+		        {
+		            b.setTextColor(getActivity().getResources().getColor(R.color.black));
+		        }
+		        return false;
+			}
+		});
+		b.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Add a new Landmark
+			}
+		});
 	}
 
 	@Override
