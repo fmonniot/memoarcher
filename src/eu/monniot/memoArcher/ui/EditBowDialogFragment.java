@@ -14,14 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-public class AddBowDialogFragment extends DialogFragment {
+public class EditBowDialogFragment extends DialogFragment {
 	
 	private AlertDialog mAlertDialog;
 	
 	private boolean mMandatory = false; 
 
-	static AddBowDialogFragment newInstance() {
-		AddBowDialogFragment f = new AddBowDialogFragment();
+	static EditBowDialogFragment newInstance() {
+		EditBowDialogFragment f = new EditBowDialogFragment();
 		
 		return f;
 	}

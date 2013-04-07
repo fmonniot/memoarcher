@@ -3,7 +3,7 @@ package eu.monniot.memoArcher.ui;
 import eu.monniot.memoArcher.Bow;
 import eu.monniot.memoArcher.BowManager;
 import eu.monniot.memoArcher.R;
-import eu.monniot.memoArcher.ui.AddBowDialogFragment.OnDialogResultListener;
+import eu.monniot.memoArcher.ui.EditBowDialogFragment.OnDialogResultListener;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -51,7 +51,7 @@ public class FirstActivity extends FragmentActivity implements OnDialogResultLis
 	    ft.addToBackStack(null);
 
 	    // Create and show the dialog.
-	    AddBowDialogFragment newFragment = AddBowDialogFragment.newInstance();
+	    EditBowDialogFragment newFragment = EditBowDialogFragment.newInstance();
 	    newFragment.setMandatory(true);
 	    newFragment.show(ft, "dialog");
 	}

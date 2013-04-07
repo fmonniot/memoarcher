@@ -15,7 +15,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * The database version (must be incremented if the database schema change)
      */
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     
     /*
      * SQL Helpers
@@ -25,7 +25,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String INT_TYPE = " INTEGER";
     private static final String DOUBLE_TYPE = " REAL";
     private static final String COMMA_SEP = ",";
-    
+
     private static final String SQL_CREATE_BOWS =
         "CREATE TABLE " + BowEntry.TABLE_NAME + " (" +
         		BowEntry._ID + INT_TYPE + " PRIMARY KEY" + COMMA_SEP +
@@ -33,8 +33,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         		BowEntry.COLUMN_NAME_MARK_UNIT + DOUBLE_TYPE + COMMA_SEP +
         		BowEntry.COLUMN_NAME_DISTANCE_UNIT + DOUBLE_TYPE +
         " )";
-    
 
+    private static final String SQL_CREATE_LANDMARKS =
+        "CREATE TABLE " + LandmarkEntry.TABLE_NAME + " (" +
+        		LandmarkEntry._ID + INT_TYPE + " PRIMARY KEY" + COMMA_SEP +
+        		LandmarkEntry.COLUMN_NAME_BOW_ID + INT_TYPE  + COMMA_SEP +
+        		LandmarkEntry.COLUMN_NAME_MARK + DOUBLE_TYPE + COMMA_SEP +
+        		LandmarkEntry.COLUMN_NAME_DISTANCE + DOUBLE_TYPE +
+        " )";
+    
 	public DatabaseHelper(Context context) {
         // calls the super constructor, requesting the default cursor factory.
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -43,6 +50,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(SQL_CREATE_BOWS);
+		db.execSQL(SQL_CREATE_LANDMARKS);
 	}
 
 	/**
@@ -51,14 +59,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 */
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		db.execSQL("DROP TABLE IF EXISTS " + BowEntry.TABLE_NAME); onCreate(db);}
+		db.execSQL("DROP TABLE IF EXISTS "+BowEntry.TABLE_NAME);
+		db.execSQL("DROP TABLE IF EXISTS "+LandmarkEntry.TABLE_NAME);
+		db.execSQL(SQL_CREATE_BOWS);
+		db.execSQL(SQL_CREATE_LANDMARKS);
+	}
 
 	/**
 	 * Same as {@link DatabaseHelper#onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)}
 	 */
 	@Override
-    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		db.execSQL("DROP TABLE IF EXISTS " + BowEntry.TABLE_NAME); onCreate(db);}
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
 
 
 }

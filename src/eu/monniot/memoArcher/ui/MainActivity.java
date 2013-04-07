@@ -5,7 +5,7 @@ import java.util.Locale;
 import eu.monniot.memoArcher.Bow;
 import eu.monniot.memoArcher.BowManager;
 import eu.monniot.memoArcher.R;
-import eu.monniot.memoArcher.ui.AddBowDialogFragment.OnDialogResultListener;
+import eu.monniot.memoArcher.ui.EditBowDialogFragment.OnDialogResultListener;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
@@ -180,7 +180,7 @@ public class MainActivity extends FragmentActivity implements
 	    ft.addToBackStack(null);
 
 	    // Create and show the dialog.
-	    DialogFragment newFragment = AddBowDialogFragment.newInstance();
+	    DialogFragment newFragment = EditBowDialogFragment.newInstance();
 	    newFragment.show(ft, "dialog");
 	}
 

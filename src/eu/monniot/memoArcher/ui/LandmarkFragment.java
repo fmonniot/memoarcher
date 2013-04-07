@@ -1,6 +1,7 @@
 package eu.monniot.memoArcher.ui;
 
 import eu.monniot.memoArcher.Bow;
+import eu.monniot.memoArcher.Landmark;
 import eu.monniot.memoArcher.R;
 import android.app.Activity;
 import android.os.Bundle;
@@ -128,11 +129,6 @@ public class LandmarkFragment extends Fragment implements OnDataChanged {
 		mDataHasChanged = false;
 	}
 
-	/**
-	 * Cannot be made public because it depend massively of the mBow attribute
-	 * @author François
-	 *
-	 */
 	private class LandmarkAdapter extends BaseAdapter {
 		LayoutInflater mInflater;
 		Bow mBow;
@@ -149,7 +145,7 @@ public class LandmarkFragment extends Fragment implements OnDataChanged {
 		}
 
 		@Override
-		public Bow.Landmark getItem(int position) {
+		public Landmark getItem(int position) {
 			return mBow.getLandmark(position);
 		}
 
@@ -175,10 +171,10 @@ public class LandmarkFragment extends Fragment implements OnDataChanged {
 				holder = (LandmarkViewHolder) convertView.getTag();
 			}
 			
-			Bow.Landmark landmark = getItem(position);
-			holder.markValue.setText(String.valueOf(landmark.mark));
+			Landmark landmark = getItem(position);
+			holder.markValue.setText(String.valueOf(landmark.getMark()));
 			holder.markUnit.setText(mBow.getMarkUnit());
-			holder.distanceValue.setText(String.valueOf(landmark.distance));
+			holder.distanceValue.setText(String.valueOf(landmark.getDistance()));
 			holder.distanceUnit.setText(mBow.getDistanceUnit());
 			
 			return convertView;

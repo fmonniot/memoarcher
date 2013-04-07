@@ -26,10 +26,12 @@ public class BowManager {
 	
 	DatabaseHelper mDbHelper;
 	SharedPreferences mPreferences;
+	LandmarkManager mLandmarkManager;
 	
 	public BowManager(Context context) {
 		mDbHelper = new DatabaseHelper(context);
 		mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+		mLandmarkManager = new LandmarkManager(context);
 	}
 	
 	public Bow createBow(String name, String markUnit, String distanceUnit) {
@@ -129,6 +131,7 @@ public class BowManager {
 		
 		if( bowId > 0) {
 			bow.setId(bowId);
+			mLandmarkManager.save(bow.getLandmarks(), bowId);
 			return bow;
 		}
 		throw new SQLException("Failed to insert row into " + BowEntry.TABLE_NAME);
@@ -162,7 +165,7 @@ public class BowManager {
 		bow.setName(c.getString(1));
 		bow.setMarkUnit(c.getString(2));
 		bow.setDistanceUnit(c.getString(3));
-		
+		bow.addLandmarks(mLandmarkManager.getAllByBow(bow));
 		return bow;
 	}
 
