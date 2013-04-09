@@ -1,5 +1,21 @@
 package eu.monniot.memoArcher.test.activerecord.query;
 
-public class DeleteTest {
+import eu.monniot.memoArcher.activerecord.query.Delete;
+import eu.monniot.memoArcher.test.activerecord.MockModel;
 
+
+public class DeleteTest extends SqlableTestCase{
+
+	public void testDelete() {
+		assertSqlEquals("DELETE ", new Delete());
+	}
+
+	public void testDeleteFrom() {
+		assertSqlEquals("DELETE FROM MockModel", new Delete().from(MockModel.class));
+	}
+	
+	public void testDeleteFromWhere() {
+		assertSqlEquals("DELETE FROM MockModel WHERE id = 1", 
+				new Delete().from(MockModel.class).where("id = 1") );
+	}
 }
