@@ -1,5 +1,9 @@
 package eu.monniot.memoArcher.activerecord;
 
-public class Model {
-
+public abstract class Model {
+	
+	// Database properties
+	public String getTableName() {
+		return "TABLENAME";
+	}
 }

@@ -6,6 +6,11 @@ public class Delete implements Sqlable {
 
 	public Delete() {}
 	
+	/**
+	 * Initialize a new DELETE statement. Use this with {@link From} class for specified the query
+	 * @param table
+	 * @return
+	 */
 	public From from(Class<? extends Model> table) {
 		return new From(table, this);
 	}
