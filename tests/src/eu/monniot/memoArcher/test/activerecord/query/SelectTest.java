@@ -1,7 +1,7 @@
 package eu.monniot.memoArcher.test.activerecord.query;
 
 import eu.monniot.memoArcher.activerecord.query.Select;
-import eu.monniot.memoArcher.test.activerecord.MockModel;
+import eu.monniot.memoArcher.test.mock.MockModel;
 
 public class SelectTest extends SqlableTestCase {
 	private static final String SELECT_PREFIX = "SELECT ";

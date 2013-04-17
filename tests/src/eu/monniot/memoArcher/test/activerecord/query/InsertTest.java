@@ -1,7 +1,7 @@
 package eu.monniot.memoArcher.test.activerecord.query;
 
 import eu.monniot.memoArcher.activerecord.query.Insert;
-import eu.monniot.memoArcher.test.activerecord.MockModel;
+import eu.monniot.memoArcher.test.mock.MockModel;
 
 public class InsertTest extends SqlableTestCase {
 	private static final String INSERT_PREFIX = "INSERT INTO MockModel ";
@@ -11,14 +11,13 @@ public class InsertTest extends SqlableTestCase {
 	public void testInsertWithValue() {
 		assertSqlEquals(INSERT_PREFIX + "VALUES ( value1 )",
 						insert()
-							.add("value1"));
+							.values("value1"));
 	}
 	
 	public void testInsertWithMultipleValue() {
 		assertSqlEquals(INSERT_PREFIX + "VALUES ( value1, value2 )",
 						insert()
-						.add("value1")
-						.add("value2"));
+						.values("value1", "value2"));
 	}
 	
 	private Insert insert() {

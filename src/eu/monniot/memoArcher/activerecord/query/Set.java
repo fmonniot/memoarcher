@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import eu.monniot.memoArcher.activerecord.Model;
+import eu.monniot.memoArcher.activerecord.ActiveRecord;
 
 public class Set implements Sqlable {
 	
@@ -72,12 +72,11 @@ public class Set implements Sqlable {
 	}
 	
 	/**
-	 * Execute the query builded so far and return the corresponding object
+	 * Execute the query builded so far
 	 * @return
 	 */
-	public <T extends Model> T execute() {
-		//TODO execute sql
-		return null;
+	public void execute() {
+		ActiveRecord.databaseHelper().execSql(toSql(), getArguments());
 	}
 
 	/**

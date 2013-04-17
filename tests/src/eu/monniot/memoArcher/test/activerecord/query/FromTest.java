@@ -1,8 +1,8 @@
 package eu.monniot.memoArcher.test.activerecord.query;
 
 import eu.monniot.memoArcher.activerecord.query.From;
-import eu.monniot.memoArcher.test.activerecord.MockModel;
-import eu.monniot.memoArcher.test.activerecord.SqlableMock;
+import eu.monniot.memoArcher.test.mock.MockModel;
+import eu.monniot.memoArcher.test.mock.SqlableMock;
 
 public class FromTest extends SqlableTestCase {
 	private static final String FROM_PREFIX = "FROM MockModel";
@@ -20,26 +20,26 @@ public class FromTest extends SqlableTestCase {
 	public void testFromWhereWithArgs() {
 		From query = from().where("id = ?", 1);
 		assertArrayEquals(query.getArguments(), "1");
-		assertSqlEquals(FROM_PREFIX + " WHERE Id = ?",
+		assertSqlEquals(FROM_PREFIX + " WHERE id = ?",
 							query);
 
-		query = from().where("Id > ? AND Id < ?", 5, 10);
+		query = from().where("id > ? AND id < ?", 5, 10);
 		assertArrayEquals(query.getArguments(), "5", "10");
-		assertSqlEquals(FROM_PREFIX + " WHERE Id > ? AND Id < ?",
+		assertSqlEquals(FROM_PREFIX + " WHERE id > ? AND id < ?",
 							query);
 		
 		query = from()
-				.where("Id != ?", 10)
-				.where("Id IN (?, ?, ?)", 5, 10, 15)
-				.where("Id > ? AND Id < ?", 5, 10);
+				.where("id != ?", 10)
+				.where("id IN (?, ?, ?)", 5, 10, 15)
+				.where("id > ? AND id < ?", 5, 10);
 		assertArrayEquals(query.getArguments(), "5", "10");
-		assertSqlEquals(FROM_PREFIX + " WHERE Id > ? AND Id < ?",
+		assertSqlEquals(FROM_PREFIX + " WHERE id > ? AND id < ?",
 							query);
 	}
 	
 	public void testFromOrderBy() {
-		assertSqlEquals(FROM_PREFIX + " ORDER BY Id DESC",
-				from().orderBy("Id DESC"));
+		assertSqlEquals(FROM_PREFIX + " ORDER BY id DESC",
+				from().orderBy("id DESC"));
 	}
 	
 	

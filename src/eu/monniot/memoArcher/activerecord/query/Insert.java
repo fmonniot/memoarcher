@@ -1,11 +1,13 @@
 package eu.monniot.memoArcher.activerecord.query;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 
 import android.database.SQLException;
 
+import eu.monniot.memoArcher.activerecord.ActiveRecord;
 import eu.monniot.memoArcher.activerecord.Model;
 import eu.monniot.memoArcher.activerecord.annotation.Table;
 
@@ -23,13 +25,21 @@ public class Insert implements Sqlable {
 	}
 	
 	/**
-	 * Add a value to this INSERT statement. The call order is significant 
+	 * Add values to this INSERT statement. The call order is significant 
 	 * @param value
 	 * @return
 	 */
-	public Insert add(String value) {
-		mValues.add(value);
+	public Insert values(String... values) {
+		mValues.addAll(Arrays.asList(values));
 		return this; 
+	}
+
+	/**
+	 * Execute the query builded so far and return the corresponding object
+	 * @return
+	 */
+	public Long execute() {
+		return ActiveRecord.databaseHelper().insert(mTable, mValues);
 	}
 	
 	@Override

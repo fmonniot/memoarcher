@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import eu.monniot.memoArcher.activerecord.ActiveRecord;
 import eu.monniot.memoArcher.activerecord.Model;
 import eu.monniot.memoArcher.activerecord.annotation.Table;
 
@@ -93,8 +94,12 @@ public class From implements Sqlable {
 	 * @return
 	 */
 	public <T extends Model> List<T> execute() {
-		// execute the query
-		return null;
+		if(mQueryBase instanceof Select) {
+			return ActiveRecord.databaseHelper().query(mTable, toSql(), getArguments());
+		} else {
+			ActiveRecord.databaseHelper().execSql(toSql(), getArguments());
+			return null;
+		}
 	}
 
 	/**
@@ -102,17 +107,28 @@ public class From implements Sqlable {
 	 * @return
 	 */
 	public <T extends Model> T executeSingle() {
-		limit(1);
-		// Execute the query
-		return null;
+		if(mQueryBase instanceof Select) {
+			limit(1); // Limit database operations
+			return ActiveRecord.databaseHelper().querySingle(mTable, toSql(), getArguments());
+		} else {
+			ActiveRecord.databaseHelper().execSql(toSql(), getArguments());
+			return null;
+		}
 	}
 
 	/**
 	 * Return a list of all the WHERE arguments of this instance
 	 * @return
 	 */
-	public String[] getArguments() {
-		return new String[1];
+	public String[] getArguments() {	
+		final int size = mArguments.size();
+		final String[] args = new String[size];
+
+		for (int i = 0; i < size; i++) {
+			args[i] = mArguments.get(i).toString();
+		}
+
+		return args;
 	}
 	
 	@Override

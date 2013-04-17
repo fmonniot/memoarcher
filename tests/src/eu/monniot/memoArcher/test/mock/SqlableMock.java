@@ -1,4 +1,4 @@
-package eu.monniot.memoArcher.test.activerecord;
+package eu.monniot.memoArcher.test.mock;
 
 import eu.monniot.memoArcher.activerecord.query.Sqlable;
 

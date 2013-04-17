@@ -2,7 +2,7 @@ package eu.monniot.memoArcher.test.activerecord.query;
 
 import eu.monniot.memoArcher.activerecord.query.Set;
 import eu.monniot.memoArcher.activerecord.query.Update;
-import eu.monniot.memoArcher.test.activerecord.MockModel;
+import eu.monniot.memoArcher.test.mock.MockModel;
 
 public class UpdateTest extends SqlableTestCase {
 	private static final String UPDATE_PREFIX = "UPDATE MockModel ";
