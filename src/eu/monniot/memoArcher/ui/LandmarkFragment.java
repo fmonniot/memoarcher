@@ -169,12 +169,12 @@ public class LandmarkFragment extends Fragment implements OnDataChanged {
 		
 		@Override
 		public int getCount() {
-			return mBow.getLandmarkCount();
+			return mBow.landmarksCount();
 		}
 
 		@Override
 		public Landmark getItem(int position) {
-			return mBow.getLandmark(position);
+			return mBow.landmark(position);
 		}
 
 		@Override
@@ -200,10 +200,10 @@ public class LandmarkFragment extends Fragment implements OnDataChanged {
 			}
 			
 			Landmark landmark = getItem(position);
-			holder.markValue.setText(String.valueOf(landmark.getMark()));
-			holder.markUnit.setText(mBow.getMarkUnit());
-			holder.distanceValue.setText(String.valueOf(landmark.getDistance()));
-			holder.distanceUnit.setText(mBow.getDistanceUnit());
+			holder.markValue.setText(String.valueOf(landmark.mark));
+			holder.markUnit.setText(mBow.markUnit);
+			holder.distanceValue.setText(String.valueOf(landmark.distance));
+			holder.distanceUnit.setText(mBow.distanceUnit);
 			
 			return convertView;
 		}

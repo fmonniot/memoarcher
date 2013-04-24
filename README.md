@@ -9,4 +9,9 @@ A little android app which help me remember my landmarks archery
 TODO
 ----
 
-Refactor database with a single access point and load data asynchronously
+UI:
+ [ ] Remove FirstActivity and customize the MainActivity for displaying instruction if no bow are register
+ [ ] Improve the "Add Landmark" button
+ [ ] Implement the detail view: bow name, note field (free text)
+ [ ] Implement the bow settings view (unit per bow)
+ [ ] Remove FirstActivity and implement a view if no bow to indicate how add it

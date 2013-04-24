@@ -3,7 +3,6 @@ package eu.monniot.memoArcher.ui;
 import java.util.List;
 
 import eu.monniot.memoArcher.Bow;
-import eu.monniot.memoArcher.BowManager;
 import eu.monniot.memoArcher.R;
 
 import android.os.Bundle;
@@ -122,15 +121,14 @@ public class SettingsActivity extends PreferenceActivity {
 		}
 		
 		private void populateDefaultBowList() {
-			BowManager bowManager = new BowManager(getActivity());
-		    List<Bow> list = bowManager.getAllBow();
+		    List<Bow> list = Bow.loadAll();
 		    
 			ListPreference defaultBowList = (ListPreference) findPreference("pref_default_bow");
 		    CharSequence[] lEntries = new CharSequence[list.size()];
 		    CharSequence[] lEntryValues = new CharSequence[list.size()];
 		    int i = 0;
 			for(Bow bow : list) {
-				lEntries[i] = bow.getName();
+				lEntries[i] = bow.name;
 				lEntryValues[i] = String.valueOf(bow.getId());
 				i++;
 			}

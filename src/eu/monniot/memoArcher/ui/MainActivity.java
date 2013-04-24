@@ -3,7 +3,7 @@ package eu.monniot.memoArcher.ui;
 import java.util.Locale;
 
 import eu.monniot.memoArcher.Bow;
-import eu.monniot.memoArcher.BowManager;
+import eu.monniot.memoArcher.DatabaseUtils;
 import eu.monniot.memoArcher.R;
 import eu.monniot.memoArcher.ui.EditBowDialogFragment.OnDialogResultListener;
 import android.annotation.SuppressLint;
@@ -26,7 +26,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.SimpleCursorAdapter;
 import android.widget.SpinnerAdapter;
 
 public class MainActivity extends FragmentActivity implements 
@@ -51,8 +51,6 @@ public class MainActivity extends FragmentActivity implements
 	 * The current bow
 	 */
 	private Bow mBow;
-	
-	private BowManager mBowManager;
 
 	private SharedPreferences mPreferences;
 	
@@ -66,7 +64,6 @@ public class MainActivity extends FragmentActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		mBowManager = new BowManager(getApplication());
 		mPreferences = PreferenceManager.getDefaultSharedPreferences(getApplication());
 
 		// Create the adapter that will return a fragment for each of the three
@@ -78,16 +75,15 @@ public class MainActivity extends FragmentActivity implements
 		/*
 		 * Define the navigation 
 		 */
-		mNavigationAdapter = new ArrayAdapter<Bow>(
-				this, 
-				R.layout.simple_spinner_dropdown_item, 
-				mBowManager.getAllBow());
+		mNavigationAdapter = new SimpleCursorAdapter(getApplication(), R.layout.simple_spinner_dropdown_item,
+				DatabaseUtils.fetchBow(), new String[]{"name"}, new int[] {android.R.id.text1}, 0);
 		
 		mOnNavigationListener = new OnNavigationListener() {
 
 			  @Override
 			  public boolean onNavigationItemSelected(int position, long itemId) {
-				mBow = (Bow) mNavigationAdapter.getItem(position);
+				//TODO Investigate how to get current Item
+				//mBow = (Bow) mNavigationAdapter.getItem(position);
 				mViewPager.getAdapter().notifyDataSetChanged();
 			    return true;
 			  }
@@ -107,16 +103,19 @@ public class MainActivity extends FragmentActivity implements
 		 * 	Retrieve the default bow. If none, create one (it should not be possible
 		 *  since {@link FirstActivity} is launched before {@link MainActivity})
 		 */
-		mBow = mBowManager.findOneById(Long.parseLong(mPreferences.getString("pref_default_bow", "1")));
+		
+		Long id = Long.parseLong(mPreferences.getString("pref_default_bow", "1"));
+		mBow = Bow.load(Bow.class, id);
 		if(mBow == null) {
 			startActivity(new Intent(this, FirstActivity.class));
 		}
 		mViewPager.setAdapter(mSectionsPagerAdapter);
+		
 		mViewPager.setOnPageChangeListener(mSectionsPagerAdapter);
 		
-		getActionBar().setSelectedNavigationItem(mBowManager.findPositionOf(mBow));
+		//getActionBar().setSelectedNavigationItem(((ArrayAdapter<Bow>) mNavigationAdapter).getPosition(mBow));
 		
-		setTitle(getBow().getName());
+		setTitle(getBow().name);
 	}
 	
 	@Override
@@ -155,12 +154,11 @@ public class MainActivity extends FragmentActivity implements
 	public void onOkDialogClose(Editable name, Editable markUnit,
 			Editable distanceUnit) {
 
-		Bow bow = mBowManager.createBow(
-								name.toString(),
-								markUnit.toString(),
-								distanceUnit.toString()
-							);
-		mBowManager.save(bow);
+		Bow bow = new Bow(	name.toString(),
+							markUnit.toString(),
+							distanceUnit.toString()
+						);
+		bow.save();
 		
 	}
 

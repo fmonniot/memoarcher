@@ -1,7 +1,6 @@
 package eu.monniot.memoArcher.ui;
 
 import eu.monniot.memoArcher.Bow;
-import eu.monniot.memoArcher.BowManager;
 import eu.monniot.memoArcher.R;
 import eu.monniot.memoArcher.ui.EditBowDialogFragment.OnDialogResultListener;
 import android.annotation.SuppressLint;
@@ -16,7 +15,6 @@ import android.text.Editable;
 
 public class FirstActivity extends FragmentActivity implements OnDialogResultListener {
 
-	BowManager mBowManager;
 	Bow mBow;
 	SharedPreferences mPreferences;
 	
@@ -27,8 +25,8 @@ public class FirstActivity extends FragmentActivity implements OnDialogResultLis
 
 		// Retrieve the default bow. If none, create one
 		mPreferences = PreferenceManager.getDefaultSharedPreferences(getApplication());
-		mBowManager = new BowManager(this);
-		mBow = mBowManager.findOneById(Long.parseLong(mPreferences.getString("pref_default_bow", "1")));
+		
+		mBow = Bow.load(Bow.class, Long.parseLong(mPreferences.getString("pref_default_bow", "1")));
 		if(mBow == null) {
 			showAddBowDialog();
 		} else {
@@ -59,12 +57,11 @@ public class FirstActivity extends FragmentActivity implements OnDialogResultLis
 	@Override
 	public void onOkDialogClose(Editable name, Editable markUnit,
 			Editable distanceUnit) {
-		Bow bow = mBowManager.createBow(
-								name.toString(),
-								markUnit.toString(),
-								distanceUnit.toString()
-							);
-		mBowManager.save(bow);
+		Bow bow = new Bow(	name.toString(),
+							markUnit.toString(),
+							distanceUnit.toString()
+						);
+		bow.save();
 		
 		mPreferences.edit().putString("pref_default_bow", String.valueOf(bow.getId())).apply();
 		skipActivity();
