@@ -19,6 +19,7 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * A fragment representing a list of Items.
@@ -77,8 +78,13 @@ public class LandmarkFragment extends Fragment implements OnDataChanged {
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// TODO Auto-generated method stub
-		return super.onOptionsItemSelected(item);
+	    switch (item.getItemId()) {
+	        case R.id.action_add_landmark:
+	        	Toast.makeText(getActivity(), "Create new landmark", Toast.LENGTH_SHORT).show();
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
 	}
 	
 	@Override
