@@ -121,7 +121,7 @@ public class SettingsActivity extends PreferenceActivity {
 		}
 		
 		private void populateDefaultBowList() {
-		    List<Bow> list = Bow.loadAll();
+		    List<Bow> list = Bow.all();
 		    
 			ListPreference defaultBowList = (ListPreference) findPreference("pref_default_bow");
 		    CharSequence[] lEntries = new CharSequence[list.size()];

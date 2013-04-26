@@ -11,6 +11,7 @@ import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
@@ -82,8 +83,7 @@ public class MainActivity extends FragmentActivity implements
 
 			  @Override
 			  public boolean onNavigationItemSelected(int position, long itemId) {
-				//TODO Investigate how to get current Item
-				//mBow = (Bow) mNavigationAdapter.getItem(position);
+				mBow = Bow.loadFromCursor((Cursor) mNavigationAdapter.getItem(position));
 				mViewPager.getAdapter().notifyDataSetChanged();
 			    return true;
 			  }

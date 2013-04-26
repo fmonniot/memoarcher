@@ -13,6 +13,7 @@
     <string name="title_fragment_add_bow">Ajouter un arc</string>
     
     <string name="menu_add_bow">Nouvel arc</string>
+    <string name="menu_add_landmark">Ajouter un repère</string>
     <string name="menu_settings">Paramètres</string>
     
     <string name="pref_defaultValue_title">Valeurs par défaut</string>
@@ -24,6 +25,4 @@
     <string name="mark_unit">Unité des repères</string>
     <string name="distance_unit">Unité des distances</string>
     <string name="bow_name">Nom de l\'arc</string>
-    
-    <string name="add_landmark">Ajouter un repère</string>
 </resources>

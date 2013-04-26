@@ -12,16 +12,4 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="50dp" />
 
-    <Button
-        android:id="@android:id/addToDictionary"
-        android:layout_marginTop="-50dp"
-        android:height="50dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textIsSelectable="false"
-        android:text="@string/add_landmark"
-        android:textStyle="italic"
-        android:background="@drawable/textview_endlist" />
-
 </LinearLayout>

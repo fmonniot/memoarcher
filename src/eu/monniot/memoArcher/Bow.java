@@ -3,10 +3,11 @@ package eu.monniot.memoArcher;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.database.Cursor;
+
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
-import com.activeandroid.query.Select;
 
 
 @Table(name = "bows")
@@ -55,8 +56,14 @@ public class Bow extends Model {
 		return null;
 	}
 	
-	public static List<Bow> loadAll() {
-		return new Select().from(Bow.class).execute();
+	public static List<Bow> all() {
+		return all(Bow.class);
+	}
+	
+	public static Bow loadFromCursor(Cursor cursor){
+		Bow b = new Bow();
+		b.loadFromCursor(Bow.class, cursor);
+		return b;
 	}
 	
 	@Override
