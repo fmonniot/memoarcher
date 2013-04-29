@@ -9,6 +9,8 @@ A little android app which help me remember my landmarks archery
 TODO
 ----
 
+ [ ] Create a Model loader in fmonniot/ActiveAndroid instead of multiple loaders inside this project
+
 UI:
  [ ] Remove FirstActivity and customize the MainActivity for displaying instruction if no bow are register
  [ ] Improve the "Add Landmark" button
