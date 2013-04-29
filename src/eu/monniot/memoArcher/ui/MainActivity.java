@@ -3,8 +3,8 @@ package eu.monniot.memoArcher.ui;
 import java.util.Locale;
 
 import eu.monniot.memoArcher.Bow;
-import eu.monniot.memoArcher.DatabaseUtils;
 import eu.monniot.memoArcher.R;
+import eu.monniot.memoArcher.loaders.BowsCursorLoader;
 import eu.monniot.memoArcher.ui.EditBowDialogFragment.OnDialogResultListener;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -20,6 +20,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.util.Log;
@@ -28,10 +30,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.SimpleCursorAdapter;
-import android.widget.SpinnerAdapter;
 
 public class MainActivity extends FragmentActivity implements 
-		OnFragmentInteractionListener, OnDialogResultListener {
+		OnFragmentInteractionListener, OnDialogResultListener, LoaderCallbacks<Cursor> {
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -57,7 +58,9 @@ public class MainActivity extends FragmentActivity implements
 	
 	private OnNavigationListener mOnNavigationListener;
 	
-	private SpinnerAdapter mNavigationAdapter;
+	private SimpleCursorAdapter mNavigationAdapter;
+	
+	private static final int LOADER_ACTIONBAR = 2;
 	
 
 	@Override
@@ -77,17 +80,17 @@ public class MainActivity extends FragmentActivity implements
 		 * Define the navigation 
 		 */
 		mNavigationAdapter = new SimpleCursorAdapter(getApplication(), R.layout.simple_spinner_dropdown_item,
-				DatabaseUtils.fetchBow(), new String[]{"name"}, new int[] {android.R.id.text1}, 0);
+				null, new String[]{"name"}, new int[] {android.R.id.text1}, 0);
+		getSupportLoaderManager().initLoader(LOADER_ACTIONBAR, null, this);
 		
 		mOnNavigationListener = new OnNavigationListener() {
-
-			  @Override
-			  public boolean onNavigationItemSelected(int position, long itemId) {
+			@Override
+			public boolean onNavigationItemSelected(int position, long itemId) {
 				mBow = Bow.loadFromCursor((Cursor) mNavigationAdapter.getItem(position));
 				mViewPager.getAdapter().notifyDataSetChanged();
 			    return true;
-			  }
-			};
+			}
+		};
 			
 			ActionBar actionBar = getActionBar();
 			actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
@@ -275,6 +278,27 @@ public class MainActivity extends FragmentActivity implements
 
 		@Override
 		public void onPageScrollStateChanged(int state) {}
+	}
+
+	@Override
+	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+	    switch (id) {
+        case LOADER_ACTIONBAR:
+            return new BowsCursorLoader(this);
+        default:
+            return null; // An invalid id was passed in
+    }
+	}
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+		mNavigationAdapter.changeCursor(data);
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> loader) {
+		mNavigationAdapter.swapCursor(null);
+		
 	}
 
 	
