@@ -3,6 +3,7 @@ package eu.monniot.memoArcher.ui;
 import java.util.List;
 
 import eu.monniot.memoArcher.Bow;
+import eu.monniot.memoArcher.Constant;
 import eu.monniot.memoArcher.Landmark;
 import eu.monniot.memoArcher.R;
 import eu.monniot.memoArcher.loaders.LandmarksLoader;
@@ -38,8 +39,6 @@ import android.widget.Toast;
  */
 public class LandmarkFragment extends Fragment implements
 		OnDataChanged, LoaderCallbacks<List<Landmark>> {
-
-	private static final int LANDMARKS_LOADER = 1;
 	
 	@SuppressWarnings("unused")
 	private OnFragmentInteractionListener mListener;
@@ -99,8 +98,8 @@ public class LandmarkFragment extends Fragment implements
 		setHasOptionsMenu(true);
 		// TODO: Change Adapter to display your content
 
-		getLoaderManager().initLoader(LANDMARKS_LOADER, null, this);
-
+		getLoaderManager().initLoader(Constant.Loader.LANDMARKS, null, this);
+		
 		forceDataRefresh();
 	}
 
@@ -152,7 +151,7 @@ public class LandmarkFragment extends Fragment implements
 	@Override
 	public Loader<List<Landmark>> onCreateLoader(int id, Bundle args) {
 	    switch (id) {
-	        case LANDMARKS_LOADER:
+	        case Constant.Loader.LANDMARKS:
 	            return new LandmarksLoader(getActivity(), mBow);
 	        default:
 	            return null; // An invalid id was passed in

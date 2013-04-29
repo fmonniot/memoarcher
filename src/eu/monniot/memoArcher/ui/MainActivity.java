@@ -3,6 +3,7 @@ package eu.monniot.memoArcher.ui;
 import java.util.Locale;
 
 import eu.monniot.memoArcher.Bow;
+import eu.monniot.memoArcher.Constant;
 import eu.monniot.memoArcher.R;
 import eu.monniot.memoArcher.loaders.BowsCursorLoader;
 import eu.monniot.memoArcher.ui.EditBowDialogFragment.OnDialogResultListener;
@@ -60,8 +61,6 @@ public class MainActivity extends FragmentActivity implements
 	
 	private SimpleCursorAdapter mNavigationAdapter;
 	
-	private static final int LOADER_ACTIONBAR = 2;
-	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +80,7 @@ public class MainActivity extends FragmentActivity implements
 		 */
 		mNavigationAdapter = new SimpleCursorAdapter(getApplication(), R.layout.simple_spinner_dropdown_item,
 				null, new String[]{"name"}, new int[] {android.R.id.text1}, 0);
-		getSupportLoaderManager().initLoader(LOADER_ACTIONBAR, null, this);
+		getSupportLoaderManager().initLoader(Constant.Loader.ACTIONBAR, null, this);
 		
 		mOnNavigationListener = new OnNavigationListener() {
 			@Override
@@ -283,7 +282,7 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 	    switch (id) {
-        case LOADER_ACTIONBAR:
+        case Constant.Loader.ACTIONBAR:
             return new BowsCursorLoader(this);
         default:
             return null; // An invalid id was passed in
