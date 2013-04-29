@@ -1,11 +1,17 @@
 package eu.monniot.memoArcher.ui;
 
+import java.util.List;
+
 import eu.monniot.memoArcher.Bow;
 import eu.monniot.memoArcher.Landmark;
 import eu.monniot.memoArcher.R;
+import eu.monniot.memoArcher.loaders.LandmarksLoader;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,7 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.TextView;
@@ -30,8 +36,11 @@ import android.widget.Toast;
  * Activities containing this fragment MUST implement the {@link Callbacks}
  * interface.
  */
-public class LandmarkFragment extends Fragment implements OnDataChanged {
+public class LandmarkFragment extends Fragment implements
+		OnDataChanged, LoaderCallbacks<List<Landmark>> {
 
+	private static final int LANDMARKS_LOADER = 1;
+	
 	@SuppressWarnings("unused")
 	private OnFragmentInteractionListener mListener;
 
@@ -44,9 +53,11 @@ public class LandmarkFragment extends Fragment implements OnDataChanged {
 	 * The Adapter which will be used to populate the ListView/GridView with
 	 * Views.
 	 */
-	private ListAdapter mAdapter;
+	private ArrayAdapter<Landmark> mAdapter;
 	
 	private boolean mDataHasChanged = false;
+
+	private Bow mBow;
 
 	
 	public static LandmarkFragment newInstance() {
@@ -71,26 +82,14 @@ public class LandmarkFragment extends Fragment implements OnDataChanged {
 			throw new ClassCastException(activity.toString()
 					+ " must implement OnFragmentInteractionListener");
 		}
-
-		mAdapter = new LandmarkAdapter((MainActivity) getActivity());
+		// TODO Change below to use an interface !
+		try {
+			mBow = ((MainActivity) activity).getBow();
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString()
+					+ " must be MainActivity");
+		}
 		
-	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-	    switch (item.getItemId()) {
-	        case R.id.action_add_landmark:
-	        	Toast.makeText(getActivity(), "Create new landmark", Toast.LENGTH_SHORT).show();
-	            return true;
-	        default:
-	            return super.onOptionsItemSelected(item);
-	    }
-	}
-	
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		// TODO Auto-generated method stub
-		inflater.inflate(R.menu.fragment_landmark, menu);
 	}
 	
 	@Override
@@ -99,6 +98,10 @@ public class LandmarkFragment extends Fragment implements OnDataChanged {
 
 		setHasOptionsMenu(true);
 		// TODO: Change Adapter to display your content
+
+		getLoaderManager().initLoader(LANDMARKS_LOADER, null, this);
+
+		forceDataRefresh();
 	}
 
 	@Override
@@ -125,17 +128,47 @@ public class LandmarkFragment extends Fragment implements OnDataChanged {
 		mAdapter = null;
 	}
 
-	/**
-	 * The default content for this Fragment has a TextView that is shown when
-	 * the list is empty. If you would like to change the text, call this method
-	 * to supply the text it should use.
-	 */
-	public void setEmptyText(CharSequence emptyText) {
-		View emptyView = mListView.getEmptyView();
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	        case R.id.action_add_landmark:
+	        	Toast.makeText(getActivity(), "Creating new landmark", Toast.LENGTH_SHORT).show();
+	        	Landmark lm = new Landmark();
+	        	lm.bow = mBow;
+	        	lm.save();
+	        	forceDataRefresh();
+	        	
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
+	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.fragment_landmark, menu);
+	}
+	
+	@Override
+	public Loader<List<Landmark>> onCreateLoader(int id, Bundle args) {
+	    switch (id) {
+	        case LANDMARKS_LOADER:
+	            return new LandmarksLoader(getActivity(), mBow);
+	        default:
+	            return null; // An invalid id was passed in
+	    }
 
-		if (emptyText instanceof TextView) {
-			((TextView) emptyView).setText(emptyText);
-		}
+	}
+
+	@Override
+	public void onLoadFinished(Loader<List<Landmark>> loader, List<Landmark> data) {
+		mAdapter.clear();
+		mAdapter.addAll(data);
+	}
+
+	@Override
+	public void onLoaderReset(Loader<List<Landmark>> loader) {
+		// TODO Auto-generated method stub
 	}
 
 	@Override
@@ -148,37 +181,38 @@ public class LandmarkFragment extends Fragment implements OnDataChanged {
 		if(getActivity() == null)
 			return;
 		
-		mAdapter = new LandmarkAdapter((MainActivity) getActivity());
+		mAdapter = new LandmarksAdapter(getActivity(), R.layout.landmark_item);
 		mDataHasChanged = false;
 	}
 
-	private class LandmarkAdapter extends BaseAdapter {
+	/**
+	 * The default content for this Fragment has a TextView that is shown when
+	 * the list is empty. If you would like to change the text, call this method
+	 * to supply the text it should use.
+	 */
+	public void setEmptyText(CharSequence emptyText) {
+		View emptyView = mListView.getEmptyView();
+
+		if (emptyText instanceof TextView) {
+			((TextView) emptyView).setText(emptyText);
+		}
+	}
+	
+	private class LandmarksAdapter extends ArrayAdapter<Landmark> {
+
 		LayoutInflater mInflater;
-		Bow mBow;
-
-		public LandmarkAdapter(MainActivity activity) {
-			mInflater = LayoutInflater.from(activity);
-			mBow = activity.getBow();
-			Log.d(getTag(), "LandmarkAdapter has been created with bow "+mBow.toString());
-		}
 		
-		@Override
-		public int getCount() {
-			return mBow.landmarksCount();
+		public LandmarksAdapter(Context context, int textViewResourceId) {
+			super(context, textViewResourceId);
+			mInflater = LayoutInflater.from(context);
 		}
 
-		@Override
-		public Landmark getItem(int position) {
-			return mBow.landmark(position);
-		}
-
-		@Override
-		public long getItemId(int position) {
-			return position;
-		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
+			
+			Log.d(getTag(), "Call getView(int "+String.valueOf(position)+", View "+convertView);
+			
 			LandmarkViewHolder holder;
 			if(convertView == null) {
 				holder = new LandmarkViewHolder();
@@ -196,9 +230,9 @@ public class LandmarkFragment extends Fragment implements OnDataChanged {
 			
 			Landmark landmark = getItem(position);
 			holder.markValue.setText(String.valueOf(landmark.mark));
-			holder.markUnit.setText(mBow.markUnit);
+			holder.markUnit.setText(landmark.bow.markUnit);
 			holder.distanceValue.setText(String.valueOf(landmark.distance));
-			holder.distanceUnit.setText(mBow.distanceUnit);
+			holder.distanceUnit.setText(landmark.bow.distanceUnit);
 			
 			return convertView;
 		}
@@ -209,7 +243,8 @@ public class LandmarkFragment extends Fragment implements OnDataChanged {
 			EditText distanceValue;
 			TextView distanceUnit;
 		}
-		
 	}
+
+
 
 }
