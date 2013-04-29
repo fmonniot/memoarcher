@@ -205,10 +205,10 @@ public class MainActivity extends FragmentActivity implements
 			Fragment f = new Fragment();
 			switch (position) {
 			case 2:
-				f = BowPreferenceFragment.newInstance(getBow());
+				f = BowPreferenceFragment.newInstance();
 				break;
 			case 1:
-				f = NoteFragment.newInstance(getBow());
+				f = NoteFragment.newInstance();
 				break;
 			case 0:
 				f = LandmarkFragment.newInstance();
