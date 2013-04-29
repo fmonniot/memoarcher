@@ -38,11 +38,14 @@ public class Bow extends Model {
 	}
 
 	public List<Landmark> landmarks() {
-		mLandmarks = getMany(Landmark.class, "Landmark");
+		refreshLandmarks();
 		return mLandmarks;
 	}
 	
 	public int landmarksCount() {
+		if(mLandmarks.size() == 0)
+			refreshLandmarks();
+		
 		return mLandmarks.size();
 	}
 	
@@ -54,6 +57,10 @@ public class Bow extends Model {
 		}
 		
 		return null;
+	}
+	
+	public void refreshLandmarks() {
+		mLandmarks = getMany(Landmark.class, "bow");
 	}
 	
 	public static List<Bow> all() {
